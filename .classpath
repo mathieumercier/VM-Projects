@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="grammar/gen-src"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="labStream/src"/>
+	<classpathentry kind="lib" path="grammar/build-lib/motocity/motocity-tatoo.jar"/>
+	<classpathentry kind="lib" path="grammar/build-lib/tatoo.jar"/>
+	<classpathentry kind="lib" path="lib/asm-debug-all-5.0_BETA.jar"/>
+	<classpathentry kind="lib" path="lib/tatoo-runtime.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
