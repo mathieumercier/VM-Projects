@@ -72,6 +72,8 @@ public class RT {
 		global.register("stream_map_hasnext", StreamBuiltins.createStreamMapHasnextFunction(global));
 		global.register("stream_map_next", StreamBuiltins.createStreamMapNextFunction(global));
 		global.register("stream_map", StreamBuiltins.createStreamMapFunction(global));
+		global.register("stream_count", StreamBuiltins.createStreamCountFunction(global));
+		global.register("stream_find_first", StreamBuiltins.createStreamFindFirstFunction(global));
 
 		JSObject main = Rewriter.createFunction(Optional.of("main"), Collections.emptyList(), script.getBody(), global);
 		main.invoke(new Object[] { UNDEFINED });

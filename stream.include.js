@@ -193,11 +193,25 @@
 //    };
 //}
 
-var s = enumerate(5, function(e) { return e + 1; })
+// function stream_count() {
+//     var counter = 0;
+//
+//     while(this._hasnext()) {
+//         counter = counter + 1;
+//         this._next();
+//     }
+//
+//     return counter;
+// }
+
+// function stream_find_first() {
+//     return this._next();
+// }
+
+var s = enumerate(5, function(e) { return e + 1; });
 s = s.filter(function(e) { var r = (e % 2) == 0; return r; });
 s = s.limit(100);
 s = s.skip(90);
+print(s.count());
 
-s.map(function (a) { return a * a; }).forEach(print);
-
-generate(function() { return "hello"; }).limit(10).skip(1).forEach(print);
+print(generate(function() { return "hello"; }).limit(10).skip(1).findFirst());
