@@ -335,9 +335,8 @@ class StreamBuiltins {
 		mv.visitCode();
 
 		Dictionary dictionary = new Dictionary();
-		
-		mv.visitInsn(ACONST_NULL);
-		mv.visitMethodInsn(INVOKESTATIC, JSOBJECT, "newObject", "(L" + JSOBJECT + ";)L" + JSOBJECT + ';', false);
+
+		createJSObject(mv);
 		mv.visitInsn(DUP);
 		mv.visitLdcInsn("base");
 		int lookupThis = (int)env.lookup("this");
@@ -375,31 +374,7 @@ class StreamBuiltins {
 		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_filter_next");
 		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
 				false);
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("forEach");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_forEach");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false);
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("filter");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_filter");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false);
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("limit");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_limit");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false);
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("skip");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_skip");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("map");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_map");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
+		visitStreamMethods(mv);
 		mv.visitInsn(ARETURN);
 		mv.visitMaxs(0, 0);
 		mv.visitEnd();
@@ -419,7 +394,23 @@ class StreamBuiltins {
 
 		return JSObject.newFunction("stream_filter", mh);
 	}
-	
+
+	private static void visitStreamMethods(MethodVisitor mv) {
+		registerGlobalAsMember(mv, "forEach", "stream_forEach");
+		registerGlobalAsMember(mv, "filter", "stream_filter");
+		registerGlobalAsMember(mv, "limit", "stream_limit");
+		registerGlobalAsMember(mv, "skip", "stream_skip");
+		registerGlobalAsMember(mv, "map", "stream_map");
+	}
+
+	private static void registerGlobalAsMember(MethodVisitor mv, String memberName, String globalName) {
+		mv.visitInsn(DUP);
+		mv.visitLdcInsn(memberName);
+		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, globalName);
+		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
+				false);
+	}
+
 	static JSObject createStreamLimitHasnextFunction(JSObject global) {
 		JSObject env = JSObject.newEnv(null);
 
@@ -550,9 +541,8 @@ class StreamBuiltins {
 		mv.visitCode();
 
 		Dictionary dictionary = new Dictionary();
-		
-		mv.visitInsn(ACONST_NULL);
-		mv.visitMethodInsn(INVOKESTATIC, JSOBJECT, "newObject", "(L" + JSOBJECT + ";)L" + JSOBJECT + ';', false);
+
+		createJSObject(mv);
 		mv.visitInsn(DUP);
 		mv.visitLdcInsn("base");
 		int lookupThis = (int)env.lookup("this");
@@ -570,41 +560,9 @@ class StreamBuiltins {
 		mv.visitInvokeDynamicInsn("const", "()Ljava/lang/Object;", BSM_CONST, 0);
 		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
 				false);
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("_hasnext");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_limit_hasnext");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("_next");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_limit_next");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false);
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("forEach");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_forEach");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("filter");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_filter");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false);
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("limit");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_limit");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("skip");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_skip");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("map");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_map");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
+		registerGlobalAsMember(mv, "_hasnext", "stream_limit_hasnext");
+		registerGlobalAsMember(mv, "_next", "stream_limit_next");
+		visitStreamMethods(mv);
 		mv.visitInsn(ARETURN);
 		mv.visitMaxs(0, 0);
 		mv.visitEnd();
@@ -809,9 +767,8 @@ class StreamBuiltins {
 		mv.visitCode();
 
 		Dictionary dictionary = new Dictionary();
-		
-		mv.visitInsn(ACONST_NULL);
-		mv.visitMethodInsn(INVOKESTATIC, JSOBJECT, "newObject", "(L" + JSOBJECT + ";)L" + JSOBJECT + ';', false);
+
+		createJSObject(mv);
 		mv.visitInsn(DUP);
 		mv.visitLdcInsn("base");
 		int lookupThis = (int) env.lookup("this");
@@ -828,47 +785,11 @@ class StreamBuiltins {
 		mv.visitLdcInsn("skipped");
 		mv.visitInvokeDynamicInsn("false", "()Ljava/lang/Object;", BSM_FALSE);
 		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("do_skip");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_skip_do_skip");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
 				false);
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("_hasnext");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_skip_hasnext");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("_next");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_skip_next");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("forEach");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_forEach");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("filter");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_filter");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("limit");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_limit");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("skip");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_skip");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("map");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_map");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
+		registerGlobalAsMember(mv, "do_skip", "stream_skip_do_skip");
+		registerGlobalAsMember(mv, "_hasnext", "stream_skip_hasnext");
+		registerGlobalAsMember(mv, "_next", "stream_skip_next");
+		visitStreamMethods(mv);
 		mv.visitInsn(ARETURN);
 		mv.visitMaxs(0, 0);
 		mv.visitEnd();
@@ -986,50 +907,17 @@ class StreamBuiltins {
 		mv.visitCode();
 
 		Dictionary dictionary = new Dictionary();
-		
-		mv.visitInsn(ACONST_NULL);
-		mv.visitMethodInsn(INVOKESTATIC, JSOBJECT, "newObject", "(L" + JSOBJECT + ";)L" + JSOBJECT + ';', false);
+
+		createJSObject(mv);
 		mv.visitInsn(DUP);
 		mv.visitLdcInsn("gen");
 		int lookupGen = (int)env.lookup("gen");
 		mv.visitVarInsn(ALOAD, lookupGen);
 		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-		false);  
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("_hasnext");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "generate_hasnext");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-		false);  
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("_next");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "generate_next");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-		false);  
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("forEach");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_forEach");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-		false);  
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("filter");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_filter");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-		false);  
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("limit");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_limit");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-		false);  
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("skip");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_skip");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
 		false);
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("map");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_map");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
+		registerGlobalAsMember(mv, "_hasnext", "generate_hasnext");
+		registerGlobalAsMember(mv, "_next", "generate_next");
+		visitStreamMethods(mv);
 		mv.visitInsn(ARETURN);
 		mv.visitMaxs(0, 0);
 		mv.visitEnd();
@@ -1160,9 +1048,8 @@ class StreamBuiltins {
 		mv.visitCode();
 
 		Dictionary dictionary = new Dictionary();
-		
-		mv.visitInsn(ACONST_NULL);
-		mv.visitMethodInsn(INVOKESTATIC, JSOBJECT, "newObject", "(L" + JSOBJECT + ";)L" + JSOBJECT + ';', false);
+
+		createJSObject(mv);
 		mv.visitInsn(DUP);
 		mv.visitLdcInsn("seed");
 		int lookupSeed = (int)env.lookup("seed");
@@ -1175,41 +1062,9 @@ class StreamBuiltins {
 		mv.visitVarInsn(ALOAD, lookupGen);
 		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
 		false);
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("_hasnext");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "enumerate_hasnext");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-		false);
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("_next");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "enumerate_next");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-		false);
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("filter");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_filter");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-		false);
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("forEach");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_forEach");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-		false);
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("limit");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_limit");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-		false);
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("skip");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_skip");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-		false);
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("map");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_map");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
+		registerGlobalAsMember(mv, "_hasnext", "enumerate_hasnext");
+		registerGlobalAsMember(mv, "_next", "enumerate_next");
+		visitStreamMethods(mv);
 		mv.visitInsn(ARETURN);
 		
 		mv.visitMaxs(0, 0);
@@ -1333,9 +1188,8 @@ class StreamBuiltins {
 		mv.visitCode();
 
 		Dictionary dictionary = new Dictionary();
-		
-		mv.visitInsn(ACONST_NULL);
-		mv.visitMethodInsn(INVOKESTATIC, JSOBJECT, "newObject", "(L" + JSOBJECT + ";)L" + JSOBJECT + ';', false);
+
+		createJSObject(mv);
 		mv.visitInsn(DUP);
 		mv.visitLdcInsn("base");
 		int lookupThis = (int) env.lookup("this");
@@ -1348,41 +1202,9 @@ class StreamBuiltins {
 		mv.visitVarInsn(ALOAD, lookupN);
 		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
 				false);
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("_hasnext");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_map_hasnext");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("_next");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_map_next");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("forEach");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_forEach");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("filter");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_filter");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("limit");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_limit");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("skip");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_skip");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
-		mv.visitInsn(DUP);
-		mv.visitLdcInsn("map");
-		mv.visitInvokeDynamicInsn("lookup", "()Ljava/lang/Object;", BSM_LOOKUP, "stream_map");
-		mv.visitMethodInsn(INVOKEVIRTUAL, JSOBJECT, "register", "(Ljava/lang/String;Ljava/lang/Object;)V",
-				false); 
+		registerGlobalAsMember(mv, "_hasnext", "stream_map_hasnext");
+		registerGlobalAsMember(mv, "_next", "stream_map_next");
+		visitStreamMethods(mv);
 		mv.visitInsn(ARETURN);
 		mv.visitMaxs(0, 0);
 		mv.visitEnd();
@@ -1402,5 +1224,10 @@ class StreamBuiltins {
 
 		return JSObject.newFunction("stream_map", mh);
 	}
-	
+
+	private static void createJSObject(MethodVisitor mv) {
+		mv.visitInsn(ACONST_NULL);
+		mv.visitMethodInsn(INVOKESTATIC, JSOBJECT, "newObject", "(L" + JSOBJECT + ";)L" + JSOBJECT + ';', false);
+	}
+
 }
