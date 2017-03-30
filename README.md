@@ -2,7 +2,7 @@
 
 ## Why ?
 This project is made for scholar purpose by three students of Université de Paris-Est Marne-la-Vallée (UPEM).
-The project is then to be evaluated by our teacher, Rémy Forax. 
+The project is then to be evaluated by our teacher. 
 
 ## What?
 The goal of this course was to learn how to interpret languages and what were the different steps of optimisation available.
